@@ -18,10 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "i2c.h"
+#include "usart.h"
+#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "PRINTF.H"
+#include "OLED.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,7 +51,6 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -86,15 +89,54 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_USART1_UART_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-	
+	OLED_Init();
+//	Printf_Init(&huart1);
+  /*在(16, 0)位置显示字符串"Hello World!"，字体大小为8*16点阵*/
+  OLED_ShowString(0, 0, "blog.zeruns.tech", OLED_8X16);
+
+  /*在(0, 18)位置显示字符'A'，字体大小为6*8点阵*/
+  OLED_ShowChar(0, 18, 'A', OLED_6X8);
+
+  /*在(16, 18)位置显示字符串"Hello World!"，字体大小为6*8点阵*/
+  OLED_ShowString(16, 18, "Hello World!", OLED_6X8);
+
+  /*在(0, 28)位置显示数字12345，长度为5，字体大小为6*8点阵*/
+  OLED_ShowNum(0, 28, 12345, 5, OLED_6X8);
+
+  /*在(40, 28)位置显示有符号数字-66，长度为2，字体大小为6*8点阵*/
+  OLED_ShowSignedNum(40, 28, -66, 2, OLED_6X8);
+
+  /*在(70, 28)位置显示十六进制数字0xA5A5，长度为4，字体大小为6*8点阵*/
+  OLED_ShowHexNum(70, 28, 0xA5A5, 4, OLED_6X8);
+
+  /*在(0, 38)位置显示二进制数字0xA5，长度为8，字体大小为6*8点阵*/
+  OLED_ShowBinNum(0, 38, 0xA5, 8, OLED_6X8);
+
+  /*在(60, 38)位置显示浮点数字123.45，整数部分长度为3，小数部分长度为2，字体大小为6*8点阵*/
+  OLED_ShowFloatNum(60, 38, 123.45, 3, 2, OLED_6X8);
+
+  /*在(0, 48)位置显示汉字串"你好，世界。"，字体大小为固定的16*16点阵*/
+  OLED_ShowChinese(0, 48, "你好，世界。");
+
+  /*在(96, 48)位置显示图像，宽16像素，高16像素，图像数据为Diode数组*/
+  OLED_ShowImage(96, 48, 16, 16, Diode);
+
+  /*在(96, 18)位置打印格式化字符串，字体大小为6*8点阵，格式化字符串为"[%02d]"*/
+  OLED_Printf(96, 18, OLED_6X8, "[%02d]", 6);
+
+	OLED_Update();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//		printf("一个小蜜蜂 \n");
 		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_SET);
+		HAL_Delay(300);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -139,35 +181,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-}
-
-/**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_GPIO_Init(void)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
-
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : PA0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-/* USER CODE BEGIN MX_GPIO_Init_2 */
-/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */

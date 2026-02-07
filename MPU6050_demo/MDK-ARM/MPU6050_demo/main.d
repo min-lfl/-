@@ -24,4 +24,13 @@ mpu6050_demo\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma_ex.h
 mpu6050_demo\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h
 mpu6050_demo\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h
 mpu6050_demo\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h
+mpu6050_demo\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h
 mpu6050_demo\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
+mpu6050_demo\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+mpu6050_demo\main.o: ../Core/Inc/i2c.h
+mpu6050_demo\main.o: ../Core/Inc/usart.h
+mpu6050_demo\main.o: ../Core/Inc/gpio.h
+mpu6050_demo\main.o: ../User_Drivers/PRINTF.H
+mpu6050_demo\main.o: E:\Keil5 C51\Keil5 C51\ARM\ARMCC\Bin\..\include\stdio.h
+mpu6050_demo\main.o: ../User_Drivers/OLED.h
+mpu6050_demo\main.o: ../User_Drivers/OLED_Data.h

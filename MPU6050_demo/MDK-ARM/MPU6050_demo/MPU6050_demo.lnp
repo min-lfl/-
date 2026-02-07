@@ -1,11 +1,13 @@
 --cpu Cortex-M3
 "mpu6050_demo\startup_stm32f103xb.o"
 "mpu6050_demo\main.o"
+"mpu6050_demo\gpio.o"
+"mpu6050_demo\i2c.o"
+"mpu6050_demo\usart.o"
 "mpu6050_demo\stm32f1xx_it.o"
 "mpu6050_demo\stm32f1xx_hal_msp.o"
 "mpu6050_demo\stm32f1xx_hal_gpio_ex.o"
-"mpu6050_demo\stm32f1xx_hal_tim.o"
-"mpu6050_demo\stm32f1xx_hal_tim_ex.o"
+"mpu6050_demo\stm32f1xx_hal_i2c.o"
 "mpu6050_demo\stm32f1xx_hal.o"
 "mpu6050_demo\stm32f1xx_hal_rcc.o"
 "mpu6050_demo\stm32f1xx_hal_rcc_ex.o"
@@ -16,8 +18,14 @@
 "mpu6050_demo\stm32f1xx_hal_flash.o"
 "mpu6050_demo\stm32f1xx_hal_flash_ex.o"
 "mpu6050_demo\stm32f1xx_hal_exti.o"
+"mpu6050_demo\stm32f1xx_hal_tim.o"
+"mpu6050_demo\stm32f1xx_hal_tim_ex.o"
+"mpu6050_demo\stm32f1xx_hal_uart.o"
 "mpu6050_demo\system_stm32f1xx.o"
---strict --scatter "MPU6050_demo\MPU6050_demo.sct"
+"mpu6050_demo\printf.o"
+"mpu6050_demo\oled.o"
+"mpu6050_demo\oled_data.o"
+--library_type=microlib --strict --scatter "MPU6050_demo\MPU6050_demo.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "MPU6050_demo.map" -o MPU6050_demo\MPU6050_demo.axf
