@@ -54,6 +54,17 @@
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
+// 初始化 DWT（在 main 函数初始化部分调用一次）：
+void DWT_Init(void) {
+   CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; // 开启追踪单元
+   DWT->CYCCNT = 0;                                // 计数器清零
+   DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;           // 开启计数器
+}
+
+// 编写获取微秒的函数
+uint32_t micros(void) {
+    return DWT->CYCCNT / (SystemCoreClock / 1000000);
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -94,6 +105,7 @@ int main(void)
   MX_I2C1_Init();
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
+	DWT_Init();
 	OLED_Init();
 	MPU6050_Init(&hi2c2);
 	Printf_Init(&huart1);
@@ -101,7 +113,10 @@ int main(void)
 	// 读取数据
 	MPU6050_t mpu6050_date;
 	
-
+	//读取时间计算
+	uint32_t old_Time=0;	//老时间（姿态解算前）
+	uint32_t new_Time=0;	//新时间（姿态解算后）
+	uint32_t diff_Time=0;	//时间差值
 
 //  /*在(0, 28)位置显示数字12345，长度为5，字体大小为6*8点阵*/
 //  OLED_ShowNum(0, 28, 12345, 5, OLED_6X8);
@@ -112,8 +127,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		MPU6050_Read_All(&hi2c2,&mpu6050_date);
-//		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_SET);
+		old_Time = micros();								//读取姿态解算前时间
+		MPU6050_Read_All(&hi2c2,&mpu6050_date);	//进行姿态解算，更新结构体
+		new_Time = micros();								//读取姿态解算后时间
+		diff_Time = new_Time - old_Time;				//计算时间差，得出姿态解算所花时间
+
 		printf("x轴加速度%d x轴角速度%d \n",mpu6050_date.Accel_X_RAW,mpu6050_date.Gyro_X_RAW);
 		printf("y轴加速度%d y轴角速度%d \n",mpu6050_date.Accel_Y_RAW,mpu6050_date.Gyro_Y_RAW);
 		printf("z轴加速度%d z轴角速度%d \n",mpu6050_date.Accel_Z_RAW,mpu6050_date.Gyro_Z_RAW);
@@ -124,8 +142,12 @@ int main(void)
 		printf(" \n");
 		printf("当前x轴姿态角%f 度 \n",mpu6050_date.KalmanAngleX);
 		printf("当前y轴姿态角%f 度 \n",mpu6050_date.KalmanAngleY);
-		printf(" \n \n");
+		printf(" \n");
+		printf("姿态解算更新数据花费时间%d us \n",diff_Time);
+		printf(" \n");
 		HAL_Delay(200);
+		
+//		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_SET);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
