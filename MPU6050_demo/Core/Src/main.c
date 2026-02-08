@@ -26,6 +26,7 @@
 /* USER CODE BEGIN Includes */
 #include "PRINTF.H"
 #include "OLED.h"
+#include "mpu6050.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,52 +92,40 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_I2C1_Init();
+  MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
 	OLED_Init();
-//	Printf_Init(&huart1);
-  /*在(16, 0)位置显示字符串"Hello World!"，字体大小为8*16点阵*/
-  OLED_ShowString(0, 0, "blog.zeruns.tech", OLED_8X16);
+	MPU6050_Init(&hi2c2);
+	Printf_Init(&huart1);
+	
+	// 读取数据
+	MPU6050_t mpu6050_date;
+	
 
-  /*在(0, 18)位置显示字符'A'，字体大小为6*8点阵*/
-  OLED_ShowChar(0, 18, 'A', OLED_6X8);
 
-  /*在(16, 18)位置显示字符串"Hello World!"，字体大小为6*8点阵*/
-  OLED_ShowString(16, 18, "Hello World!", OLED_6X8);
-
-  /*在(0, 28)位置显示数字12345，长度为5，字体大小为6*8点阵*/
-  OLED_ShowNum(0, 28, 12345, 5, OLED_6X8);
-
-  /*在(40, 28)位置显示有符号数字-66，长度为2，字体大小为6*8点阵*/
-  OLED_ShowSignedNum(40, 28, -66, 2, OLED_6X8);
-
-  /*在(70, 28)位置显示十六进制数字0xA5A5，长度为4，字体大小为6*8点阵*/
-  OLED_ShowHexNum(70, 28, 0xA5A5, 4, OLED_6X8);
-
-  /*在(0, 38)位置显示二进制数字0xA5，长度为8，字体大小为6*8点阵*/
-  OLED_ShowBinNum(0, 38, 0xA5, 8, OLED_6X8);
-
-  /*在(60, 38)位置显示浮点数字123.45，整数部分长度为3，小数部分长度为2，字体大小为6*8点阵*/
-  OLED_ShowFloatNum(60, 38, 123.45, 3, 2, OLED_6X8);
-
-  /*在(0, 48)位置显示汉字串"你好，世界。"，字体大小为固定的16*16点阵*/
-  OLED_ShowChinese(0, 48, "你好，世界。");
-
-  /*在(96, 48)位置显示图像，宽16像素，高16像素，图像数据为Diode数组*/
-  OLED_ShowImage(96, 48, 16, 16, Diode);
-
-  /*在(96, 18)位置打印格式化字符串，字体大小为6*8点阵，格式化字符串为"[%02d]"*/
-  OLED_Printf(96, 18, OLED_6X8, "[%02d]", 6);
-
-	OLED_Update();
+//  /*在(0, 28)位置显示数字12345，长度为5，字体大小为6*8点阵*/
+//  OLED_ShowNum(0, 28, 12345, 5, OLED_6X8);
+//	OLED_Update();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//		printf("一个小蜜蜂 \n");
-		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_SET);
-		HAL_Delay(300);
+		MPU6050_Read_All(&hi2c2,&mpu6050_date);
+//		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_SET);
+		printf("x轴加速度%d x轴角速度%d \n",mpu6050_date.Accel_X_RAW,mpu6050_date.Gyro_X_RAW);
+		printf("y轴加速度%d y轴角速度%d \n",mpu6050_date.Accel_Y_RAW,mpu6050_date.Gyro_Y_RAW);
+		printf("z轴加速度%d z轴角速度%d \n",mpu6050_date.Accel_Z_RAW,mpu6050_date.Gyro_Z_RAW);
+		printf(" \n");
+		printf("转化后x轴加速度%f g 转化后x轴角速度%f 度/s \n",mpu6050_date.Ax,mpu6050_date.Gx);
+		printf("转化后y轴加速度%f g 转化后y轴角速度%f 度/s \n",mpu6050_date.Ay,mpu6050_date.Gy);
+		printf("转化后z轴加速度%f g 转化后z轴角速度%f 度/s \n",mpu6050_date.Az,mpu6050_date.Gz);
+		printf(" \n");
+		printf("当前x轴姿态角%f 度 \n",mpu6050_date.KalmanAngleX);
+		printf("当前y轴姿态角%f 度 \n",mpu6050_date.KalmanAngleY);
+		printf(" \n \n");
+		HAL_Delay(200);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

@@ -25,6 +25,7 @@
 "mpu6050_demo\printf.o"
 "mpu6050_demo\oled.o"
 "mpu6050_demo\oled_data.o"
+"mpu6050_demo\mpu6050.o"
 --library_type=microlib --strict --scatter "MPU6050_demo\MPU6050_demo.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

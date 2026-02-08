@@ -34,3 +34,4 @@ mpu6050_demo\main.o: ../User_Drivers/PRINTF.H
 mpu6050_demo\main.o: E:\Keil5 C51\Keil5 C51\ARM\ARMCC\Bin\..\include\stdio.h
 mpu6050_demo\main.o: ../User_Drivers/OLED.h
 mpu6050_demo\main.o: ../User_Drivers/OLED_Data.h
+mpu6050_demo\main.o: ../User_Drivers/mpu6050.h
